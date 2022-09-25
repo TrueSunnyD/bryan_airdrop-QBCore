@@ -170,17 +170,17 @@ RemoveAirdrop = function(id)
     end
 end
 
-RewardPlayer = function(source, items)
+RewardPlayer = function(source, items)             --Still need to convert to qb-core
     local src = source
     local xPlayer = QBCore.Functions.GetPlayer(src)
 
     for k, v in pairs(items) do
         if v.type == 'item' then
-            xPlayer.addInventoryItem(v.name, v.count)
+            xPlayer.addInventoryItem(v.name, v.count) --Still need to convert to qb-core
         elseif v.type == 'weapon' then
-            xPlayer.addWeapon(v.name, v.count)
+            xPlayer.addWeapon(v.name, v.count) --Still need to convert to qb-core
         elseif v.type == 'account' then
-            xPlayer.addAccountMoney(v.name, v.count)
+            xPlayer.addAccountMoney(v.name, v.count) --Still need to convert to qb-core
         end
     end
 end
