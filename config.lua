@@ -1,7 +1,7 @@
 Config = {}
 
 Config.FrameworkObj = 'QBCore:GetObject'
-Config.PlayerLoaded = 'QBCore:playerLoaded' --untested
+Config.PlayerLoaded = 'QBCore:OnPlayerLoaded' --untested
 
 Config.Locale = 'en'
 
