@@ -1,13 +1,13 @@
-ESX = nil
+QBCore = exports['qb-core']:GetCoreObject()
 local airdrops = {}
 
 Citizen.CreateThread(function()
-    while ESX == nil do
-        TriggerEvent(Config.FrameworkObj, function(obj) ESX = obj end)
-        Citizen.Wait(100)
+    while QBCore == nil do
+        TriggerEvent(Config.FrameworkObj, function(obj) QBCore = obj end)
+        Wait(100)
     end
 
-    while ESX.GetPlayerData().job == nil do Citizen.Wait(100) end
+    while QBCore.Functions.GetPlayerData().job == nil do Wait(100) end
 
     Citizen.CreateThread(function() StartScript(); end)
     Citizen.CreateThread(function() ShowLocations(); end)
@@ -69,7 +69,7 @@ StartScript = function()
             end
         end
 
-        Citizen.Wait(wait)
+        Wait(wait)
     end
 end
 
@@ -85,7 +85,7 @@ ShowLocations = function()
 
                 if distance <= 3.0 then
                     wait = 2
-                    ESX.Game.Utils.DrawText3D(v.coords, _U('3d_press_to_pickup'), 0.8, 4)
+                    DrawText3D(v.coords, _U('3d_press_to_pickup'), 0.8, 4)
 
                     if IsControlJustPressed(1, 51) then
                         Config.ProgressBar(_U('progress_bar_picking_up'), Config.Airdrops.CollectTime * 1000)
@@ -146,8 +146,25 @@ end
 RemoveObject = function(id)
     for k, v in pairs(airdrops) do
         if v.id == id then
-            ESX.Game.DeleteObject(v.object)
+            DeleteObject(v.object)
             if Config.Blip.Enabled then RemoveBlip(v.blip) end
         end
     end
+end
+
+
+
+local function DrawText3D(x, y, z, text)
+    SetTextScale(0.35, 0.35)
+    SetTextFont(4)
+    SetTextProportional(1)
+    SetTextColour(255, 255, 255, 215)
+    SetTextEntry("STRING")
+    SetTextCentre(true)
+    AddTextComponentString(text)
+    SetDrawOrigin(x,y,z, 0)
+    DrawText(0.0, 0.0)
+    local factor = (string.len(text)) / 370
+    DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
+    ClearDrawOrigin()
 end
