@@ -1,9 +1,9 @@
-ESX = nil
+local QBCore = exports['qb-core']:GetCoreObject()
 local airdrops = {}
 local tryCount = 0
 local cooldown = math.random(Config.Airdrops.Cooldown.min, Config.Airdrops.Cooldown.max)
 
-TriggerEvent(Config.FrameworkObj, function(obj) ESX = obj end)
+TriggerEvent(Config.FrameworkObj, function(obj) QBCore = obj end)
 
 AddEventHandler('onResourceStart', function(resourceName)
     if resourceName == GetCurrentResourceName() then
@@ -15,7 +15,7 @@ AddEventHandler('onResourceStart', function(resourceName)
     end
 end)
 
-RegisterNetEvent('esx:playerLoaded', function(playerId, xPlayer)
+RegisterNetEvent('QBCore:playerLoaded', function(playerId, xPlayer)
     TriggerClientEvent('bryan_airdrops:syncAirdrops', playerId, airdrops)
 end)
 
@@ -44,7 +44,7 @@ StartAirdropLoop = function()
     while true do
         while cooldown > 0 do
             if Config.Debug then print(string.format('%s Minutes Till Next Airdrop Spawn', cooldown)) end
-            Citizen.Wait(60 * 1000)
+            Wait(60 * 1000)
             cooldown = cooldown - 1
         end
 
@@ -58,7 +58,7 @@ StartAirdropLoop = function()
 end
 
 if Config.Airdrops.Command.enabled then
-    ESX.RegisterCommand(Config.Airdrops.Command.name, Config.Airdrops.Command.groups, function(xPlayer, args, showError)
+    QBCore.Commands.Add(Config.Airdrops.Command.name, Config.Airdrops.Command.groups, function(xPlayer, args, showError)
         if Config.Debug then print(args.lootTable == nil, Config.LootTables[args.lootTable] ~= nil) end
         if args.lootTable == nil or Config.LootTables[args.lootTable] ~= nil then
             if Config.Airdrops.Command.CommandRestart then RestartCooldown() end
@@ -116,7 +116,7 @@ SpawnAirdrop = function(lootTable, customCoords)
 
             while not airdrops[airdropIndex].landed do
                 airdrops[airdropIndex].coords = airdrops[airdropIndex].coords - vector3(0.0, 0.0, 0.01 * Config.Airdrops.FallSpeed)
-                Citizen.Wait(1)
+                Wait(1)
             end
 
             if Config.Debug then print(string.format('Airdrop (ID: %s) Landed', airdrops[airdropIndex].id)) end
@@ -145,7 +145,7 @@ SelectLoottable = function(lootTable)
         local chance = math.random(1, 100)
 
         while randomLootTable.Chance < chance do
-            Citizen.Wait(10)
+            Wait(10)
             
             randomLootTable = Config.LootTables[math.random(1, #Config.LootTables)]
             chance = math.random(1, 100)
@@ -171,7 +171,8 @@ RemoveAirdrop = function(id)
 end
 
 RewardPlayer = function(source, items)
-    local xPlayer = ESX.GetPlayerFromId(source)
+    local src = source
+    local xPlayer = QBCore.Functions.GetPlayer(src)
 
     for k, v in pairs(items) do
         if v.type == 'item' then
