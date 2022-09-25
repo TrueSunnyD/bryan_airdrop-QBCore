@@ -1,7 +1,7 @@
 Config = {}
 
-Config.FrameworkObj = 'esx:getSharedObject'
-Config.PlayerLoaded = 'esx:playerLoaded'
+Config.FrameworkObj = 'QBCore:GetObject'
+Config.PlayerLoaded = 'QBCore:playerLoaded' --untested
 
 Config.Locale = 'en'
 
@@ -61,20 +61,23 @@ Config.Blip = {
     ShortRange = true,
 }
 
-
+QBCore = exports['qb-core']:GetCoreObject()
 -- Functions
 Config.Notification = function(msg) -- Client Side | Custom Notification if You want | By Default: ESX Notification
-    TriggerEvent('esx:showNotification', msg)
+    --TriggerEvent('esx:showNotification', msg)
+    QBCore.Functions.Notify(msg)
+    
 end
 
 Config.ProgressBar = function(msg, time) -- Client Side | Custom Progress Bar | This function can return true (Airdrop will be looted) or false (Airdrop won't be looted)
-    Citizen.Wait(1000)
+    Wait(1000)
 
     return true
 end
 
 Config.NotifyPlayers = function(msg, coords) -- Server Side | Should be perhaps some kind of email to the player's phone | For testing it is made as Default ESX Notification
-    TriggerClientEvent('esx:showNotification', -1, msg)
+    --TriggerClientEvent('esx:showNotification', -1, msg)
+    QBCore.Functions.Notify(msg)
 end
 
 Config.NotifyExecute = function(playerId, xPlayer) -- Server Side | This function is triggered when someone spawn in airdrop through command | You can add logs for example here and get identifier, name from playerId or xPlayer
